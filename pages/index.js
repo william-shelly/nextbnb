@@ -10,7 +10,7 @@ const content = (
     <div className="columns-1 py-4">
       <h2 className='font-bold'>Places to Stay</h2>
     </div>
-    <div className="columns-3 houses">
+    <div className="houses grid grid-flow-col gap-4">
       {houses.map((house, index) => {
         return <House key={index} {...house} />
       })}
