@@ -3,13 +3,13 @@ import Nav from "./Nav"
 
 export default function Footer(props) {
   return (
-    <div className="nav-container">
+    <footer className="nav-container">
       <Link href="/">
         <a>
           <img src="/img/logo.png" alt="nextbnb" />
         </a>
       </Link>
       <Nav />
-    </div>
+    </footer>
   )
 }
