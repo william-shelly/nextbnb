@@ -1,9 +1,19 @@
+import { useState } from "react"
 import DayPickerInput from "react-day-picker/DayPickerInput"
+import { DateUtils } from "react-day-picker"
+
 import "react-day-picker/lib/style.css"
 import dateFnsFormat from 'date-fns/format'
 import dateFnsParse from 'date-fns/parse'
-import { DateUtils } from "react-day-picker"
-import { useState } from "react"
+
+const parseDate = (str, format, locale) => {
+  const parsed = dateFnsParse(str, format, new Date(), { locale })
+  return DateUtils.isDate(parsed) ? parsed : null
+}
+
+const formatDate = (date, format, locale) => dateFnsFormat(date, format, {locale})
+
+const format = 'dd MMM yyyy'
 
 const today = new Date()
 const tomorrow = new Date(today)
@@ -21,16 +31,7 @@ const numberOfNightsBetweenDates = (startDate, endDate) => {
   return dayCount
 }
 
-const parseDate = (str, format, locale) => {
-  const parsed = dateFnsParse(str, format, new Date(), { locale })
-  return DateUtils.isDate(parsed) ? parsed : null
-}
-
-const formatDate = (date, format, locale) => dateFnsFormat(date, format, {locale})
-
-const format = 'dd MMM yyyy'
-
-export default function DateRangePicker() {
+export default function DateRangePicker({ datesChanged }) {
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
 
@@ -53,11 +54,12 @@ export default function DateRangePicker() {
           }}
           onDayChange={(day) => {
             setStartDate(day)
+            const newEndDate = new Date(day)
             if (numberOfNightsBetweenDates(day, endDate) < 1) {
-              const newEndDate = new Date(day)
               newEndDate.setDate(newEndDate.getDate() + 1)
               setEndDate(newEndDate)
             }
+            datesChanged(day, newEndDate)
           }}
         />
       </div>
@@ -81,6 +83,7 @@ export default function DateRangePicker() {
           }}
           onDayChange={(day) => {
             setEndDate(day)
+            datesChanged(startDate, day)
           }}
         />
       </div>
